@@ -1,20 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using Microsoft.Office.Interop.Excel;
-using Excel = Microsoft.Office.Interop.Excel;
 
-namespace Schedule
+namespace MarsaTool
 {
-    public partial class Form1 : Form
+	public partial class Form1 : Form
     {
         const string RateCard = "Rate_Card";
         public Form1()
@@ -67,7 +56,7 @@ namespace Schedule
                 {
                     Cursor.Current = Cursors.WaitCursor;
 
-                    var c = new Campaign.Campaign();
+                    var c = new CampaignLibre.Campaign();
                     c.GetSettings(nCampaignReadFrom.Value, nCampaignReadTo.Value,
                         tbCampaignFile.Text.Trim());
 

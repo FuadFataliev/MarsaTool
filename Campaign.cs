@@ -1,21 +1,16 @@
-﻿using DocumentFormat.OpenXml.Drawing;
-using DocumentFormat.OpenXml.InkML;
-using DocumentFormat.OpenXml.Spreadsheet;
-using SpreadsheetLight;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using Excel = Microsoft.Office.Interop.Excel;
 
-namespace Schedule.Campaign
+namespace MarsaTool.Campaign
 {
-    internal class Campaign
+	internal class Campaign
     {
-        SLDocument sheet;
+        Excel.Application app;
+        Excel.Workbook wb;
+        dynamic sheet;
         string inFile;
         List<Data> rowData;
 
@@ -35,33 +30,44 @@ namespace Schedule.Campaign
 
         public void Process()
         {
-            ReadData();
+			try
+			{
+                app = new Excel.Application(); //создаём приложение Excel
+                wb = app.Workbooks.Open(inFile); //открываем наш файл           
+                sheet = wb.Worksheets[1]; //или так xlSht = xlWB.ActiveSheet //активный лист
 
-            AnalyzeCampaign();
-            AnalyzeDescription();
-            AnalyzeChannel();
+                ReadData();
 
-            var outFile = System.IO.Path.GetDirectoryName(inFile) +
-                $"\\{DateTime.Now:yy_MM_dd_HH_mm_ss}_" + System.IO.Path.GetFileName(inFile);
+                AnalyzeCampaign();
+                AnalyzeDescription();
+                AnalyzeChannel();
 
-            sheet.SaveAs(outFile);
+                var outFile = System.IO.Path.GetDirectoryName(inFile) +
+                    $"\\{DateTime.Now:yy_MM_dd_HH_mm_ss}_" + System.IO.Path.GetFileName(inFile);
+
+                sheet.SaveAs(outFile);
+            }
+            catch (Exception ex)
+			{
+                MessageBox.Show(ex.Message, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+			finally
+			{
+                sheet?.Dispose();
+                app?.Quit();
+
+                if (app != null)
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(app);
+            }
         }
 
         void ReadData()
         {
-            //var app = new Excel.Application(); //создаём приложение Excel
-            sheet = new SLDocument(inFile); //создаём приложение Excel
+            int row = readFrom;
             try
             {
-                //var wb = app.Workbooks.Open(inFile); //открываем наш файл           
-                //var sheet = wb.Worksheets[1]; //или так xlSht = xlWB.ActiveSheet //активный лист
+                rowData = new List<Data>(sheet.UsedRange.Rows.Count);
 
-                
-                var stats = sheet.GetWorksheetStatistics();
-
-                rowData = new List<Data>(stats.EndRowIndex);
-
-                int row = readFrom;
                 string brand;
                 string campaign;
                 string model;
@@ -70,26 +76,24 @@ namespace Schedule.Campaign
 
                 while (true)
                 {
-                    brand = sheet.GetCellValueAsString(row, 4).Trim(); //sheet.Cells[row, 1].Text.Trim();
+                    brand = sheet.Cells[row, 4].Text().Trim();
 
                     if (string.IsNullOrWhiteSpace(brand) || row > readTo)
                         break;
 
-                    campaign = sheet.GetCellValueAsString(row, 5).Trim();
-                    model = sheet.GetCellValueAsString(row, 6).Trim();
-                    description = sheet.GetCellValueAsString(row, 7).Trim();
-                    channel = sheet.GetCellValueAsString(row, 8).Trim();
+                    campaign = sheet.Cells[row, 5].Text().Trim();
+                    model = sheet.Cells[row, 6].Text().Trim();
+                    description = sheet.Cells[row, 7].Text().Trim();
+                    channel = sheet.Cells[row, 8].Text().Trim();
 
                     rowData.Add(new Data(row, brand, campaign, model, description, channel));
 
                     row++;
                 }
             }
-            finally
+            catch (Exception ex)
             {
-                //sheet.Dispose();
-                //app.Quit();
-                //System.Runtime.InteropServices.Marshal.ReleaseComObject(app);
+                throw new Exception($"Ошибка чтения в строке {row}", ex);
             }
         }
 
@@ -97,16 +101,14 @@ namespace Schedule.Campaign
         {
             try
             {
-                SLStyle style = sheet.CreateStyle();
-                style.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.Red, System.Drawing.Color.Red);
+                var color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.Red);
 
                 foreach (var row in rowData.Where(d => d.Brand + "/" + d.Model != d.Campaign).Select(d => d.Row))
-                    sheet.SetCellStyle(row, 1, style);
+                    sheet.Cells[row, 1].Interior.Color = color;
             }
-            catch
+            catch (Exception ex)
             {
-                //MessageBox.Show($"Ошибка в строке {line + readFrom}: {data}", "Ошибка разбора!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                throw;
+                throw new Exception("Ошибка провеки названий!", ex);
             }
         }
 
@@ -114,21 +116,18 @@ namespace Schedule.Campaign
         {
             try
             {
-                SLStyle style = sheet.CreateStyle();
-                style.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.Green, System.Drawing.Color.Green);
+                var color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.Green);
 
                 var descriptions = rowData.Select(d => new { d.Campaign, d.Description }).Distinct()
                     .GroupBy(d => d.Description).Where(group => group.Count() > 1)
                     .Select(group => group.Key).ToArray();
-
                 
                 foreach (var row in rowData.Where(d => descriptions.Contains(d.Description)).Select(d => d.Row))
-                    sheet.SetCellStyle(row, 2, style);
+                    sheet.Cells[row, 2].Interior.Color = color;
             }
-            catch
+            catch (Exception ex)
             {
-                //MessageBox.Show($"Ошибка в строке {line + readFrom}: {data}", "Ошибка разбора!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                throw;
+                throw new Exception("Ошибка проверки роликов в разных компаниях!", ex);
             }
         }
 
@@ -136,22 +135,18 @@ namespace Schedule.Campaign
         {
             try
             {
-                SLStyle style = sheet.CreateStyle();
-                style.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.Blue, System.Drawing.Color.Blue);
+                var color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.Blue);
 
                 var rows = rowData.GroupBy(d => d.Campaign)
                     .Where(group => group.GroupBy(d => d.Description).Where(g => g.Count() > 1).Any())
                     .SelectMany(g => g.GroupBy(d => d.Description).Where(s => s.Count() == 1).Select(s => s.Single().Row));
 
                 foreach (var row in rows)
-                {
-                    sheet.SetCellStyle(row, 3, style);
-                }
+                    sheet.Cells[row, 3].Interior.Color = color;
             }
-            catch
+            catch (Exception ex)
             {
-                //MessageBox.Show($"Ошибка в строке {line + readFrom}: {data}", "Ошибка разбора!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                throw;
+                throw new Exception("Ошибка проверки единичных роликов!", ex);
             }
         }
     }
