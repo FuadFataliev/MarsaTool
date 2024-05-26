@@ -15,16 +15,12 @@ namespace Schedule.Campaign
 {
     internal class Campaign
     {
-        //const string RateCard = "Rate_Card";
         SLDocument sheet;
         string inFile;
-        string channelName;
         List<Data> rowData;
 
         int readFrom;
         int readTo;
-        int writeFrom;
-        char[] separators;
 
         public void GetSettings(decimal readFrom, decimal readTo, string inFile)
         {
@@ -45,7 +41,10 @@ namespace Schedule.Campaign
             AnalyzeDescription();
             AnalyzeChannel();
 
-            sheet.SaveAs(System.IO.Path.GetDirectoryName(inFile) + "\\new_" + System.IO.Path.GetFileName(inFile));
+            var outFile = System.IO.Path.GetDirectoryName(inFile) +
+                $"\\{DateTime.Now:yy_MM_dd_HH_mm_ss}_" + System.IO.Path.GetFileName(inFile);
+
+            sheet.SaveAs(outFile);
         }
 
         void ReadData()
@@ -99,12 +98,9 @@ namespace Schedule.Campaign
             try
             {
                 SLStyle style = sheet.CreateStyle();
-                //style.SetPatternFill(PatternValues.Solid, )
                 style.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.Red, System.Drawing.Color.Red);
 
                 foreach (var row in rowData.Where(d => d.Brand + "/" + d.Model != d.Campaign).Select(d => d.Row))
-                    //sheet.SetRowStyle(row, style);
-                    //sheet.cell`
                     sheet.SetCellStyle(row, 1, style);
             }
             catch
@@ -120,8 +116,6 @@ namespace Schedule.Campaign
             {
                 SLStyle style = sheet.CreateStyle();
                 style.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.Green, System.Drawing.Color.Green);
-
-                //rowData.GroupBy(d => )
 
                 var descriptions = rowData.Select(d => new { d.Campaign, d.Description }).Distinct()
                     .GroupBy(d => d.Description).Where(group => group.Count() > 1)
@@ -145,26 +139,15 @@ namespace Schedule.Campaign
                 SLStyle style = sheet.CreateStyle();
                 style.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.Blue, System.Drawing.Color.Blue);
 
-                //rowData.GroupBy(d => )
+                var rows = rowData.GroupBy(d => d.Campaign)
+                    .Where(group => group.GroupBy(d => d.Description).Where(g => g.Count() > 1).Any())
+                    .SelectMany(g => g.GroupBy(d => d.Description).Where(s => s.Count() == 1).Select(s => s.Single().Row));
 
-                var grouppedData = rowData.GroupBy(d => d.Campaign)
-                    .Where(group => group.Select(d => d.Description).Distinct().Count() > 1)
-                    .Where(group => group.Select(d => d.Description).GroupBy(g => g).Where(g => g.Count() == 1).Any());
-
-                foreach (var group in grouppedData)
-                    foreach (var data in group)
-                    {
-                        sheet.SetCellStyle(data.Row, 3, style);
-                    }
-
-/*                var descriptions = rowData.Select(d => new { d.Campaign, d.Description }).Distinct()
-                    .GroupBy(d => d.Description).Where(group => group.Count() > 1)
-                    .Select(group => group.Key).ToArray();d
-
-
-                foreach (var row in rowData.Where(d => descriptions.Contains(d.Description)).Select(d => d.Row))
-                    sheet.SetRowStyle(row, style);
-*/            }
+                foreach (var row in rows)
+                {
+                    sheet.SetCellStyle(row, 3, style);
+                }
+            }
             catch
             {
                 //MessageBox.Show($"Ошибка в строке {line + readFrom}: {data}", "Ошибка разбора!", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -190,7 +173,5 @@ namespace Schedule.Campaign
             Description = description;
             Channel = channel;
         }
-
-        //public override string ToString() => $"Дни: <{Days}>, Время: <{Time}>, Цена: <{Price}>, Название: <{Name}>.";
     }
 }

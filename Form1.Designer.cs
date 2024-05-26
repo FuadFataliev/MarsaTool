@@ -30,9 +30,7 @@ namespace Schedule
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            this.bOpenFile = new System.Windows.Forms.Button();
             this.openExcel = new System.Windows.Forms.OpenFileDialog();
-            this.tbFilePath = new System.Windows.Forms.TextBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.tbSeparators = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
@@ -44,13 +42,15 @@ namespace Schedule
             this.label2 = new System.Windows.Forms.Label();
             this.nReadFrom = new System.Windows.Forms.NumericUpDown();
             this.label1 = new System.Windows.Forms.Label();
-            this.bProcess = new System.Windows.Forms.Button();
-            this.bProcessCampaign = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
             this.nCampaignReadTo = new System.Windows.Forms.NumericUpDown();
             this.label9 = new System.Windows.Forms.Label();
             this.nCampaignReadFrom = new System.Windows.Forms.NumericUpDown();
             this.label10 = new System.Windows.Forms.Label();
+            this.bProcess = new System.Windows.Forms.Button();
+            this.tbFilePath = new System.Windows.Forms.TextBox();
+            this.bOpenFile = new System.Windows.Forms.Button();
+            this.bProcessCampaign = new System.Windows.Forms.Button();
             this.tbCampaignFile = new System.Windows.Forms.TextBox();
             this.bChooseCampaign = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
@@ -62,31 +62,16 @@ namespace Schedule
             ((System.ComponentModel.ISupportInitialize)(this.nCampaignReadFrom)).BeginInit();
             this.SuspendLayout();
             // 
-            // bOpenFile
-            // 
-            this.bOpenFile.Location = new System.Drawing.Point(12, 110);
-            this.bOpenFile.Name = "bOpenFile";
-            this.bOpenFile.Size = new System.Drawing.Size(93, 23);
-            this.bOpenFile.TabIndex = 0;
-            this.bOpenFile.Text = "Выбрать файл";
-            this.bOpenFile.UseVisualStyleBackColor = true;
-            this.bOpenFile.Click += new System.EventHandler(this.bOpenFile_Click);
-            // 
             // openExcel
             // 
             this.openExcel.FileName = "openFileDialog1";
             // 
-            // tbFilePath
-            // 
-            this.tbFilePath.Location = new System.Drawing.Point(112, 112);
-            this.tbFilePath.Name = "tbFilePath";
-            this.tbFilePath.ReadOnly = true;
-            this.tbFilePath.Size = new System.Drawing.Size(285, 20);
-            this.tbFilePath.TabIndex = 8;
-            // 
             // panel1
             // 
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.bProcess);
+            this.panel1.Controls.Add(this.tbFilePath);
+            this.panel1.Controls.Add(this.bOpenFile);
             this.panel1.Controls.Add(this.tbSeparators);
             this.panel1.Controls.Add(this.label5);
             this.panel1.Controls.Add(this.tbChanelName);
@@ -99,7 +84,7 @@ namespace Schedule
             this.panel1.Controls.Add(this.label1);
             this.panel1.Location = new System.Drawing.Point(12, 12);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(493, 82);
+            this.panel1.Size = new System.Drawing.Size(493, 126);
             this.panel1.TabIndex = 9;
             // 
             // tbSeparators
@@ -215,36 +200,19 @@ namespace Schedule
             this.label1.TabIndex = 8;
             this.label1.Text = "Читать с";
             // 
-            // bProcess
-            // 
-            this.bProcess.Location = new System.Drawing.Point(424, 110);
-            this.bProcess.Name = "bProcess";
-            this.bProcess.Size = new System.Drawing.Size(81, 23);
-            this.bProcess.TabIndex = 10;
-            this.bProcess.Text = "Обработать";
-            this.bProcess.UseVisualStyleBackColor = true;
-            this.bProcess.Click += new System.EventHandler(this.bProcess_Click);
-            // 
-            // bProcessCampaign
-            // 
-            this.bProcessCampaign.Location = new System.Drawing.Point(424, 285);
-            this.bProcessCampaign.Name = "bProcessCampaign";
-            this.bProcessCampaign.Size = new System.Drawing.Size(81, 23);
-            this.bProcessCampaign.TabIndex = 14;
-            this.bProcessCampaign.Text = "Обработать";
-            this.bProcessCampaign.UseVisualStyleBackColor = true;
-            this.bProcessCampaign.Click += new System.EventHandler(this.bProcessCampaign_Click);
-            // 
             // panel2
             // 
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel2.Controls.Add(this.bProcessCampaign);
+            this.panel2.Controls.Add(this.tbCampaignFile);
+            this.panel2.Controls.Add(this.bChooseCampaign);
             this.panel2.Controls.Add(this.nCampaignReadTo);
             this.panel2.Controls.Add(this.label9);
             this.panel2.Controls.Add(this.nCampaignReadFrom);
             this.panel2.Controls.Add(this.label10);
-            this.panel2.Location = new System.Drawing.Point(12, 187);
+            this.panel2.Location = new System.Drawing.Point(12, 175);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(493, 82);
+            this.panel2.Size = new System.Drawing.Size(493, 133);
             this.panel2.TabIndex = 13;
             // 
             // nCampaignReadTo
@@ -299,20 +267,58 @@ namespace Schedule
             this.label10.TabIndex = 8;
             this.label10.Text = "Читать с";
             // 
+            // bProcess
+            // 
+            this.bProcess.Location = new System.Drawing.Point(394, 87);
+            this.bProcess.Name = "bProcess";
+            this.bProcess.Size = new System.Drawing.Size(81, 23);
+            this.bProcess.TabIndex = 20;
+            this.bProcess.Text = "Обработать";
+            this.bProcess.UseVisualStyleBackColor = true;
+            this.bProcess.Click += new System.EventHandler(this.bProcess_Click);
+            // 
+            // tbFilePath
+            // 
+            this.tbFilePath.Location = new System.Drawing.Point(120, 87);
+            this.tbFilePath.Name = "tbFilePath";
+            this.tbFilePath.ReadOnly = true;
+            this.tbFilePath.Size = new System.Drawing.Size(264, 20);
+            this.tbFilePath.TabIndex = 19;
+            // 
+            // bOpenFile
+            // 
+            this.bOpenFile.Location = new System.Drawing.Point(20, 85);
+            this.bOpenFile.Name = "bOpenFile";
+            this.bOpenFile.Size = new System.Drawing.Size(93, 23);
+            this.bOpenFile.TabIndex = 18;
+            this.bOpenFile.Text = "Выбрать файл";
+            this.bOpenFile.UseVisualStyleBackColor = true;
+            this.bOpenFile.Click += new System.EventHandler(this.bOpenFile_Click);
+            // 
+            // bProcessCampaign
+            // 
+            this.bProcessCampaign.Location = new System.Drawing.Point(394, 93);
+            this.bProcessCampaign.Name = "bProcessCampaign";
+            this.bProcessCampaign.Size = new System.Drawing.Size(81, 23);
+            this.bProcessCampaign.TabIndex = 17;
+            this.bProcessCampaign.Text = "Обработать";
+            this.bProcessCampaign.UseVisualStyleBackColor = true;
+            this.bProcessCampaign.Click += new System.EventHandler(this.bProcessCampaign_Click);
+            // 
             // tbCampaignFile
             // 
-            this.tbCampaignFile.Location = new System.Drawing.Point(112, 287);
+            this.tbCampaignFile.Location = new System.Drawing.Point(120, 93);
             this.tbCampaignFile.Name = "tbCampaignFile";
             this.tbCampaignFile.ReadOnly = true;
-            this.tbCampaignFile.Size = new System.Drawing.Size(285, 20);
-            this.tbCampaignFile.TabIndex = 12;
+            this.tbCampaignFile.Size = new System.Drawing.Size(264, 20);
+            this.tbCampaignFile.TabIndex = 16;
             // 
             // bChooseCampaign
             // 
-            this.bChooseCampaign.Location = new System.Drawing.Point(12, 285);
+            this.bChooseCampaign.Location = new System.Drawing.Point(20, 91);
             this.bChooseCampaign.Name = "bChooseCampaign";
             this.bChooseCampaign.Size = new System.Drawing.Size(93, 23);
-            this.bChooseCampaign.TabIndex = 11;
+            this.bChooseCampaign.TabIndex = 15;
             this.bChooseCampaign.Text = "Выбрать файл";
             this.bChooseCampaign.UseVisualStyleBackColor = true;
             this.bChooseCampaign.Click += new System.EventHandler(this.bChooseCampaign_Click);
@@ -321,15 +327,9 @@ namespace Schedule
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(516, 440);
-            this.Controls.Add(this.bProcessCampaign);
+            this.ClientSize = new System.Drawing.Size(516, 321);
             this.Controls.Add(this.panel2);
-            this.Controls.Add(this.tbCampaignFile);
-            this.Controls.Add(this.bChooseCampaign);
-            this.Controls.Add(this.bProcess);
             this.Controls.Add(this.panel1);
-            this.Controls.Add(this.tbFilePath);
-            this.Controls.Add(this.bOpenFile);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "Form1";
@@ -344,15 +344,11 @@ namespace Schedule
             ((System.ComponentModel.ISupportInitialize)(this.nCampaignReadTo)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nCampaignReadFrom)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.Button bOpenFile;
         private System.Windows.Forms.OpenFileDialog openExcel;
-        private System.Windows.Forms.TextBox tbFilePath;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.NumericUpDown nWriteFrom;
         private System.Windows.Forms.Label label3;
@@ -364,13 +360,15 @@ namespace Schedule
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox tbSeparators;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Button bProcess;
-        private System.Windows.Forms.Button bProcessCampaign;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.NumericUpDown nCampaignReadTo;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.NumericUpDown nCampaignReadFrom;
         private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Button bProcess;
+        private System.Windows.Forms.TextBox tbFilePath;
+        private System.Windows.Forms.Button bOpenFile;
+        private System.Windows.Forms.Button bProcessCampaign;
         private System.Windows.Forms.TextBox tbCampaignFile;
         private System.Windows.Forms.Button bChooseCampaign;
     }
