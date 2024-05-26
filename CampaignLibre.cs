@@ -25,6 +25,9 @@ namespace MarsaTool.CampaignLibre
                 this.readTo = Int32.MaxValue;
 
             this.inFile = inFile;
+
+            if (string.IsNullOrWhiteSpace(inFile))
+                throw new Exception("Файл не выбран!");
         }
 
         public void Process()

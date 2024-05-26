@@ -39,7 +39,8 @@ namespace MarsaTool
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message + ex.StackTrace, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(ex.Message + "\n\nStack Trace: " + ex.StackTrace,
+                        "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             finally
@@ -56,7 +57,7 @@ namespace MarsaTool
                 {
                     Cursor.Current = Cursors.WaitCursor;
 
-                    var c = new CampaignLibre.Campaign();
+                    var c = new Campaign.Campaign();
                     c.GetSettings(nCampaignReadFrom.Value, nCampaignReadTo.Value,
                         tbCampaignFile.Text.Trim());
 
@@ -64,7 +65,8 @@ namespace MarsaTool
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message + ex.StackTrace, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(ex.Message + "\n\nStack Trace: " +ex.StackTrace,
+                        "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             finally

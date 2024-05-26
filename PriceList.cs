@@ -23,6 +23,9 @@ namespace MarsaTool
 
         public void GetSettings(decimal readFrom, decimal readTo, decimal writeFrom, string separators, string inFile, string channelName)
         {
+            if (string.IsNullOrWhiteSpace(inFile))
+                throw new Exception("Файл не выбран!");
+
             this.readFrom = Convert.ToInt32(readFrom);
             this.readTo = Convert.ToInt32(readTo);
 

@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{CE76EBE8-350A-48F7-B127-10977AF624EB}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>Schedule</RootNamespace>
-    <AssemblyName>Schedule</AssemblyName>
+    <RootNamespace>MarsaTool</RootNamespace>
+    <AssemblyName>MarsaTool</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

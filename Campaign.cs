@@ -19,6 +19,9 @@ namespace MarsaTool.Campaign
 
         public void GetSettings(decimal readFrom, decimal readTo, string inFile)
         {
+            if (string.IsNullOrWhiteSpace(inFile))
+                throw new Exception("Файл не выбран!");
+
             this.readFrom = Convert.ToInt32(readFrom);
             this.readTo = Convert.ToInt32(readTo);
 
@@ -46,6 +49,8 @@ namespace MarsaTool.Campaign
                     $"\\{DateTime.Now:yy_MM_dd_HH_mm_ss}_" + System.IO.Path.GetFileName(inFile);
 
                 sheet.SaveAs(outFile);
+
+                MessageBox.Show($"Прповеренный файл сохранен в {outFile}", "Завершено!", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
 			{
@@ -53,7 +58,6 @@ namespace MarsaTool.Campaign
             }
 			finally
 			{
-                sheet?.Dispose();
                 app?.Quit();
 
                 if (app != null)
