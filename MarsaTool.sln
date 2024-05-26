@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31624.102
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.33808.371
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Schedule", "Schedule.csproj", "{CE76EBE8-350A-48F7-B127-10977AF624EB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarsaTool", "MarsaTool.csproj", "{CE76EBE8-350A-48F7-B127-10977AF624EB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
